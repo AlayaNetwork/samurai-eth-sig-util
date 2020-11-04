@@ -1,4 +1,4 @@
-import * as ethUtil from 'ethereumjs-util';
+import * as ethUtil from '@alayanetwork/ethereumjs-util';
 import * as ethAbi from 'ethereumjs-abi';
 import * as nacl from 'tweetnacl';
 import * as naclUtil from 'tweetnacl-util';
@@ -293,7 +293,15 @@ function normalize (input: number | string): string {
     throw new Error(msg);
   }
 
-  return ethUtil.addHexPrefix(input.toLowerCase());
+  if (!ethUtil.isBech32Address(input)) {
+    // var msg = 'eth-sig-util.normalize() requires bech32 input.'
+    // msg += ' received ' + (typeof input) + ': ' + input
+    // throw new Error(msg)
+    return ethUtil.addHexPrefix(input.toLowerCase());
+  }
+
+  return input;
+  // return ethUtil.addHexPrefix(input.toLowerCase());
 }
 
 function personalSign<T extends MessageTypes> (privateKey: Buffer, msgParams: MsgParams<TypedData | TypedMessage<T>>): string {
